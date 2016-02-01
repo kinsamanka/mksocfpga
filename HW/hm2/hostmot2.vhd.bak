@@ -151,7 +151,7 @@ constant StepGens: integer := NumberOfModules(TheModuleID,StepGenTag);
 --constant MuxedQCounters: integer := NumberOfModules(TheModuleID,MuxedQCountTag);			-- non-muxed index mask
 --constant MuxedQCountersMIM: integer := NumberOfModules(TheModuleID,MuxedQCountMIMTag); -- muxed index mask
 constant PWMGens : integer := NumberOfModules(TheModuleID,PWMTag);
-constant UsePWMEnas: boolean := PinExists(ThePinDesc,PWMTag,PWMCEnaPin);
+--constant UsePWMEnas: boolean := PinExists(ThePinDesc,PWMTag,PWMCEnaPin);
 --constant TPPWMGens : integer := NumberOfModules(TheModuleID,TPPWMTag);
 --constant SPIs: integer := NumberOfModules(TheModuleID,SPITag);
 --constant BSPIs: integer := NumberOfModules(TheModuleID,BSPITag);
@@ -178,11 +178,11 @@ constant UsePWMEnas: boolean := PinExists(ThePinDesc,PWMTag,PWMCEnaPin);
 --constant RegsPerTwiddler: integer := 4;	-- until I find a per instance way of doing this	
 --constant DAQFIFOs: integer := NumberOfModules(TheModuleID,DAQFIFOTag);
 --constant DAQFIFOWidth: integer := MaxInputPinsPerModule(ThePinDesc,DAQFIFOTag); -- until I find a per instance way of doing this
-constant	UseDemandModeDMA: boolean := ModuleExists(TheModuleID,DMDMATag);		-- demand mode DMA must be explicitly included in the module ID
+--constant	UseDemandModeDMA: boolean := ModuleExists(TheModuleID,DMDMATag);		-- demand mode DMA must be explicitly included in the module ID
 --constant NDRQs: integer := NumberOfModules(TheModuleID,DAQFIFOTag); -- + any other drq sources that are used
 --constant BinOscs: integer := NumberOfModules(TheModuleID,BinOscTag);
 --constant BinOscWidth: integer := MaxOutputPinsPerModule(ThePinDesc,BinOscTag);
-constant HM2DPLLs: integer := NumberOfModules(TheModuleID,HM2DPLLTag);
+--constant HM2DPLLs: integer := NumberOfModules(TheModuleID,HM2DPLLTag);
 --constant ScalerCounters: integer := NumberOfModules(TheModuleID,ScalerCounterTag);
 
 -- extract the needed Stepgen table width from the max pin# used with a stepgen tag
@@ -194,8 +194,8 @@ constant StepGenTableWidth: integer := MaxPinsPerModule(ThePinDesc,StepGenTag);
 
 --constant UseProbe: boolean := PinExists(ThePinDesc,QCountTag,QCountProbePin);
 --constant UseMuxedProbe: boolean := PinExists(ThePinDesc,MuxedQCountTag,MuxedQCountProbePin);
-constant UseStepgenIndex: boolean := PinExists(ThePinDesc,StepGenTag,StepGenIndexPin);
-constant UseStepgenProbe: boolean := PinExists(ThePinDesc,StepGenTag,StepGenProbePin);
+--constant UseStepgenIndex: boolean := PinExists(ThePinDesc,StepGenTag,StepGenIndexPin);
+--constant UseStepgenProbe: boolean := PinExists(ThePinDesc,StepGenTag,StepGenProbePin);
 
 -- all these signals should be put in per module components
 -- to reduce clutter
@@ -228,7 +228,7 @@ constant UseStepgenProbe: boolean := PinExists(ThePinDesc,StepGenTag,StepGenProb
 	signal LoadOutputInvCmd: std_logic_vector(IOPorts -1 downto 0);
 
 -- qcounter related signals
-	signal Probe : std_logic; -- hs probe input for counters,stepgens etc
+--	signal Probe : std_logic; -- hs probe input for counters,stepgens etc
 
 -- PWM related signals (this is global because its shared by two modules)
 	signal RefCountBus : std_logic_vector(PWMRefWidth-1 downto 0);
@@ -243,8 +243,8 @@ constant UseStepgenProbe: boolean := PinExists(ThePinDesc,StepGenTag,StepGenProb
 	signal WDLatchedBite : std_logic;
 
 --- Demand mode DMA related signals
-	signal LoadDMDMAMode: std_logic;
-	signal ReadDMDMAMode: std_logic;
+--	signal LoadDMDMAMode: std_logic;
+--	signal ReadDMDMAMode: std_logic;
 --	signal DRQSources: std_logic_vector(NDRQs -1 downto 0);
 
 --- ID related signals
@@ -335,7 +335,7 @@ constant UseStepgenProbe: boolean := PinExists(ThePinDesc,StepGenTag,StepGenProb
 			wdbite => WDBite,
 			wdlatchedbite => WDLatchedBite
 			);
-	end generate;
+		end generate;
 
 -- 	makedrqlogic: if UseDemandModeDMA generate
 -- 		somolddrqlogic: entity work.dmdrqlogic
@@ -395,7 +395,7 @@ constant UseStepgenProbe: boolean := PinExists(ThePinDesc,StepGenTag,StepGenProb
 -- 			end if;
 -- 		end process;
 	
---	end generate;
+	end generate;
 
 -- 	makehm2dpllmod:  if HM2DPLLs >0  generate	
 -- 	signal LoadDPLLBaseRate: std_logic;
@@ -1669,121 +1669,121 @@ constant UseStepgenProbe: boolean := PinExists(ThePinDesc,StepGenTag,StepGenProb
 	end generate makepwms;
 
 	
---	maketppwmref:  if (TPPWMGens > 0) generate
---	signal LoadTPPWMVal: std_logic_vector(TPPWMGens -1 downto 0);
---	signal LoadTPPWMENA: std_logic_vector(TPPWMGens -1 downto 0);
---	signal ReadTPPWMENA: std_logic_vector(TPPWMGens -1 downto 0);
---	signal LoadTPPWMDZ: std_logic_vector(TPPWMGens -1 downto 0);
---	signal TPPWMGenOutA: std_logic_vector(TPPWMGens -1 downto 0);
---	signal TPPWMGenOutB: std_logic_vector(TPPWMGens -1 downto 0);
---	signal TPPWMGenOutC: std_logic_vector(TPPWMGens -1 downto 0);
---	signal NTPPWMGenOutA: std_logic_vector(TPPWMGens -1 downto 0);
---	signal NTPPWMGenOutB: std_logic_vector(TPPWMGens -1 downto 0);
---	signal NTPPWMGenOutC: std_logic_vector(TPPWMGens -1 downto 0);
---	signal TPPWMEna: std_logic_vector(TPPWMGens -1 downto 0);
---	signal TPPWMFault: std_logic_vector(TPPWMGens -1 downto 0);
---	signal TPPWMSample: std_logic_vector(TPPWMGens -1 downto 0);
---	signal LoadTPPWMRate : std_logic;
---	signal TPRefCountBus : std_logic_vector(10 downto 0);
---	signal TPPWMValSel : std_logic;
---	signal TPPWMEnaSel : std_logic;
---	signal TPPWMDZSel : std_logic;
---	begin
---		tppwmref : entity work.pwmrefh
---		generic map ( 
---			buswidth => 16,
---			refwidth => 11			-- always 11 for TPPWM 
---			)
---		port map (
---			clk => clklow,
---			hclk => clkhigh,
---			refcount	=> TPRefCountBus,
---			ibus => ibus(15 downto 0),
---			pwmrateload => LoadTPPWMRate,
---			pdmrateload => '0'
---			);	
---	
---		maketppwmgens : for i in 0 to TPPWMGens-1 generate
---			tppwmgenx: entity work.threephasepwm
---			port map (
---				clk => clklow,
---				hclk => clkhigh,
---				refcount	=> TPRefCountBus,
---				ibus => ibus,
---				obus => obus,
---				loadpwmreg => LoadTPPWMVal(i),
---				loadenareg => LoadTPPWMENA(i),
---				readenareg => ReadTPPWMENA(i),
---				loaddzreg => LoadTPPWMDZ(i),
---				pwmouta => TPPWMGenOutA(i),
---				pwmoutb => TPPWMGenOutB(i),
---				pwmoutc => TPPWMGenOutC(i),
---				npwmouta => NTPPWMGenOutA(i),
---				npwmoutb => NTPPWMGenOutB(i),
---				npwmoutc => NTPPWMGenOutC(i),
---				pwmenaout => TPPWMEna(i),
---				pwmfault => TPPWMFault(i),
---				pwmsample => TPPWMSample(i)
---				
---				);
---		end generate;	
---		
---		TPPWMDecodeProcess : process (A,Readstb,writestb,TPPWMValSel, TPPWMEnaSel,TPPWMDZSel)
---		begin
---			if A(15 downto 8) = TPPWMValAddr then	 --  TPPWMVal select
---				TPPWMValSel <= '1';
---			else
---				TPPWMValSel <= '0';
---			end if;
---			if A(15 downto 8) = TPPWMEnaAddr then	 --  TPPWM mode register select
---				TPPWMEnaSel <= '1';
---			else
---				TPPWMEnaSel <= '0';
---			end if;
---			if A(15 downto 8) = TPPWMDZAddr then	 --  TPPWMDZ mode register select
---				TPPWMDZSel <= '1';
---			else
---				TPPWMDZSel <= '0';
---			end if;
---			if A(15 downto 8) = TPPWMRateAddr and writestb = '1' then	 --  
---				LoadTPPWMRate <= '1';
---			else
---				LoadTPPWMRate <= '0';
---			end if;
---			LoadTPPWMVal <= OneOfNDecode(TPPWMGENs,TPPWMValSel,writestb,A(7 downto 2)); -- 64 max
---			LoadTPPWMEna <= OneOfNDecode(TPPWMGENs,TPPWMEnaSel,writestb,A(7 downto 2));
---			ReadTPPWMEna <= OneOfNDecode(TPPWMGENs,TPPWMEnaSel,Readstb,A(7 downto 2));
---			LoadTPPWMDZ <= OneOfNDecode(TPPWMGENs,TPPWMDZSel,writestb,A(7 downto 2));
---		end process TPPWMDecodeProcess;
---
---		DoTPPWMPins: process(TPPWMGenOutA,TPPWMGenOutB,TPPWMGenOutC,
---									NTPPWMGenOutA,NTPPWMGenOutB,NTPPWMGenOutC,TPPWMEna)
---		begin	
---			for i in 0 to IOWidth -1 loop				-- loop through all the external I/O pins 
---				if ThePinDesc(i)(15 downto 8) = TPPWMTag then											
---					case (ThePinDesc(i)(7 downto 0)) is	--secondary pin function
---						when TPPWMAOutPin =>
---							AltData(i) <= TPPWMGENOutA(conv_integer(ThePinDesc(i)(23 downto 16))); 
---						when TPPWMBOutPin =>
---							AltData(i) <= TPPWMGENOutB(conv_integer(ThePinDesc(i)(23 downto 16))); 
---						when TPPWMCOutPin =>
---							AltData(i) <= TPPWMGENOutC(conv_integer(ThePinDesc(i)(23 downto 16))); 
---						when NTPPWMAOutPin =>
---							AltData(i) <= NTPPWMGENOutA(conv_integer(ThePinDesc(i)(23 downto 16))); 
---						when NTPPWMBOutPin =>
---							AltData(i) <= NTPPWMGENOutB(conv_integer(ThePinDesc(i)(23 downto 16))); 
---						when NTPPWMCOutPin =>
---							AltData(i) <= NTPPWMGENOutC(conv_integer(ThePinDesc(i)(23 downto 16))); 
---						when TPPWMEnaPin =>
---							AltData(i) <= TPPWMEna(conv_integer(ThePinDesc(i)(23 downto 16))); 
---						when TPPWMFaultPin =>
---							TPPWMFault(conv_integer(ThePinDesc(i)(23 downto 16))) <= iobits(i); 
---						when others => null;
---					end case;		
---				end if;
---			end loop;
---		end process;		
---	end generate;
+	maketppwmref:  if (TPPWMGens > 0) generate
+	signal LoadTPPWMVal: std_logic_vector(TPPWMGens -1 downto 0);
+	signal LoadTPPWMENA: std_logic_vector(TPPWMGens -1 downto 0);
+	signal ReadTPPWMENA: std_logic_vector(TPPWMGens -1 downto 0);
+	signal LoadTPPWMDZ: std_logic_vector(TPPWMGens -1 downto 0);
+	signal TPPWMGenOutA: std_logic_vector(TPPWMGens -1 downto 0);
+	signal TPPWMGenOutB: std_logic_vector(TPPWMGens -1 downto 0);
+	signal TPPWMGenOutC: std_logic_vector(TPPWMGens -1 downto 0);
+	signal NTPPWMGenOutA: std_logic_vector(TPPWMGens -1 downto 0);
+	signal NTPPWMGenOutB: std_logic_vector(TPPWMGens -1 downto 0);
+	signal NTPPWMGenOutC: std_logic_vector(TPPWMGens -1 downto 0);
+	signal TPPWMEna: std_logic_vector(TPPWMGens -1 downto 0);
+	signal TPPWMFault: std_logic_vector(TPPWMGens -1 downto 0);
+	signal TPPWMSample: std_logic_vector(TPPWMGens -1 downto 0);
+	signal LoadTPPWMRate : std_logic;
+	signal TPRefCountBus : std_logic_vector(10 downto 0);
+	signal TPPWMValSel : std_logic;
+	signal TPPWMEnaSel : std_logic;
+	signal TPPWMDZSel : std_logic;
+	begin
+		tppwmref : entity work.pwmrefh
+		generic map ( 
+			buswidth => 16,
+			refwidth => 11			-- always 11 for TPPWM 
+			)
+		port map (
+			clk => clklow,
+			hclk => clkhigh,
+			refcount	=> TPRefCountBus,
+			ibus => ibus(15 downto 0),
+			pwmrateload => LoadTPPWMRate,
+			pdmrateload => '0'
+			);	
+	
+		maketppwmgens : for i in 0 to TPPWMGens-1 generate
+			tppwmgenx: entity work.threephasepwm
+			port map (
+				clk => clklow,
+				hclk => clkhigh,
+				refcount	=> TPRefCountBus,
+				ibus => ibus,
+				obus => obus,
+				loadpwmreg => LoadTPPWMVal(i),
+				loadenareg => LoadTPPWMENA(i),
+				readenareg => ReadTPPWMENA(i),
+				loaddzreg => LoadTPPWMDZ(i),
+				pwmouta => TPPWMGenOutA(i),
+				pwmoutb => TPPWMGenOutB(i),
+				pwmoutc => TPPWMGenOutC(i),
+				npwmouta => NTPPWMGenOutA(i),
+				npwmoutb => NTPPWMGenOutB(i),
+				npwmoutc => NTPPWMGenOutC(i),
+				pwmenaout => TPPWMEna(i),
+				pwmfault => TPPWMFault(i),
+				pwmsample => TPPWMSample(i)
+				
+				);
+		end generate;	
+		
+		TPPWMDecodeProcess : process (A,Readstb,writestb,TPPWMValSel, TPPWMEnaSel,TPPWMDZSel)
+		begin
+			if A(15 downto 8) = TPPWMValAddr then	 --  TPPWMVal select
+				TPPWMValSel <= '1';
+			else
+				TPPWMValSel <= '0';
+			end if;
+			if A(15 downto 8) = TPPWMEnaAddr then	 --  TPPWM mode register select
+				TPPWMEnaSel <= '1';
+			else
+				TPPWMEnaSel <= '0';
+			end if;
+			if A(15 downto 8) = TPPWMDZAddr then	 --  TPPWMDZ mode register select
+				TPPWMDZSel <= '1';
+			else
+				TPPWMDZSel <= '0';
+			end if;
+			if A(15 downto 8) = TPPWMRateAddr and writestb = '1' then	 --  
+				LoadTPPWMRate <= '1';
+			else
+				LoadTPPWMRate <= '0';
+			end if;
+			LoadTPPWMVal <= OneOfNDecode(TPPWMGENs,TPPWMValSel,writestb,A(7 downto 2)); -- 64 max
+			LoadTPPWMEna <= OneOfNDecode(TPPWMGENs,TPPWMEnaSel,writestb,A(7 downto 2));
+			ReadTPPWMEna <= OneOfNDecode(TPPWMGENs,TPPWMEnaSel,Readstb,A(7 downto 2));
+			LoadTPPWMDZ <= OneOfNDecode(TPPWMGENs,TPPWMDZSel,writestb,A(7 downto 2));
+		end process TPPWMDecodeProcess;
+
+		DoTPPWMPins: process(TPPWMGenOutA,TPPWMGenOutB,TPPWMGenOutC,
+									NTPPWMGenOutA,NTPPWMGenOutB,NTPPWMGenOutC,TPPWMEna)
+		begin	
+			for i in 0 to IOWidth -1 loop				-- loop through all the external I/O pins 
+				if ThePinDesc(i)(15 downto 8) = TPPWMTag then											
+					case (ThePinDesc(i)(7 downto 0)) is	--secondary pin function
+						when TPPWMAOutPin =>
+							AltData(i) <= TPPWMGENOutA(conv_integer(ThePinDesc(i)(23 downto 16))); 
+						when TPPWMBOutPin =>
+							AltData(i) <= TPPWMGENOutB(conv_integer(ThePinDesc(i)(23 downto 16))); 
+						when TPPWMCOutPin =>
+							AltData(i) <= TPPWMGENOutC(conv_integer(ThePinDesc(i)(23 downto 16))); 
+						when NTPPWMAOutPin =>
+							AltData(i) <= NTPPWMGENOutA(conv_integer(ThePinDesc(i)(23 downto 16))); 
+						when NTPPWMBOutPin =>
+							AltData(i) <= NTPPWMGENOutB(conv_integer(ThePinDesc(i)(23 downto 16))); 
+						when NTPPWMCOutPin =>
+							AltData(i) <= NTPPWMGENOutC(conv_integer(ThePinDesc(i)(23 downto 16))); 
+						when TPPWMEnaPin =>
+							AltData(i) <= TPPWMEna(conv_integer(ThePinDesc(i)(23 downto 16))); 
+						when TPPWMFaultPin =>
+							TPPWMFault(conv_integer(ThePinDesc(i)(23 downto 16))) <= iobits(i); 
+						when others => null;
+					end case;		
+				end if;
+			end loop;
+		end process;		
+	end generate;
 	
 -- 	makespimod:  if SPIs >0  generate	
 -- 	signal LoadSPIBitCount: std_logic_vector(SPIs -1 downto 0);
