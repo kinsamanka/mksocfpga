@@ -152,6 +152,7 @@ IPv6AcceptRouterAdvertisements=false
 [DHCP]
 UseDomains=true
 
+EOT'
 }
 
 gen_locale_gen() {

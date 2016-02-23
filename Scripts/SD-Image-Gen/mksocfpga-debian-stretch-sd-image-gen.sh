@@ -438,15 +438,15 @@ if [ ! -z "$WORK_DIR" ]; then
 
 ##build_rootfs_into_folder
 
-#create_image
+create_image
 
-#build_rootfs_in_image_and_compress
+build_rootfs_in_image_and_compress
 
 ##fetch_extract_rcn_rootfs
 
 create_image
 
-#run_initial_sh
+run_initial_sh
 
 
 install_files
