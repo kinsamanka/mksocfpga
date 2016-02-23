@@ -35,8 +35,10 @@ install_dep() {
 # sudo qemu-debootstrap --arch=armhf --variant=buildd  --keyring /usr/share/keyrings/debian-archive-keyring.gpg --include=sudo,locales,nano,dialog,adduser,resolvconf,apt-utils,ssh,ntpdate,openssl,kmod,dbus,dbus-x11,libpam-systemd,systemd-ui,systemd,systemd-sysv,iputils-ping,iproute2,traceroute,autofs ${distro} ${ROOTFS_DIR} http://ftp.debian.org/debian
 # }
 
+##,rpcbind,autofs
+
 run_bootstrap() {
-qoutput1='sudo qemu-debootstrap --arch=armhf --variant=buildd  --keyring /usr/share/keyrings/debian-archive-keyring.gpg --include=sudo,locales,nano,dialog,adduser,resolvconf,apt-utils,ssh,ntpdate,openssl,kmod,dbus,dbus-x11,xorg,libpam-systemd,systemd-ui,systemd,systemd-sysv,iputils-ping,iproute2,traceroute,autofs ${distro} ${ROOTFS_DIR} http://ftp.debian.org/debian'
+qoutput1='sudo qemu-debootstrap --arch=armhf --variant=buildd  --keyring /usr/share/keyrings/debian-archive-keyring.gpg --include=sudo,locales,nano,adduser,apt-utils,libssh2-1,openssh-client,openssh-server,ntpdate,openssl,kmod,dbus,dbus-x11,xorg,systemd,upower,rsyslog,libpam-systemd,systemd-sysv,net-tools,accountsservice,iputils-ping,iproute2,avahi-daemon,avahi-discover,libnss-mdns,debianutils,isc-dhcp-common,isc-dhcp-client,traceroute ${distro} ${ROOTFS_DIR} http://ftp.debian.org/debian'
 echo " "
 echo "Note: Eval.Start.."
 eval $qoutput1
@@ -48,11 +50,6 @@ echo "Note: Eval..Done ."
 #function run_bootstrap {
 #sudo qemu-debootstrap --arch=armhf --variant=buildd  --keyring /usr/share/keyrings/debian-archive-keyring.gpg --include=adduser,resolvconf,apt-#utils,ssh,sudo,ntpdate,openssl,vim,nano,cryptsetup,lvm2,locales,login,build-essential,gcc,g++,gdb,make,subversion,git,curl,zip,unzip,pbzip2,pigz,dialog,systemd,openssh-#server,ntpdate,less,cpufrequtils,isc-dhcp-client,ntp,console-setup,ca-certificates,xserver-xorg,xserver-xorg-video-dummy,debian-archive-keyring,debian-keyring,debian-#ports-archive-keyring,netbase,iproute2,iputils-ping,iputils-arping,iputils-tracepath,wget,kmod,haveged $distro $ROOTFS_DIR http://ftp.debian.org/debian/
 #}
-
-# run_bootstrap() {
-# sudo qemu-debootstrap --arch=armhf --variant=buildd  --keyring /usr/share/keyrings/debian-archive-keyring.gpg --include=libpython-stdlib,python2.7,sudo,locales,nano,kmod,dbus,dbus-x11,libpam-systemd,systemd-ui,systemd,systemd-sysv,dhcpcd-gtk,dhcpcd-dbus,autodns-dhcp,dhcpcd5,iputils-ping,iproute2,traceroute,autofs,xorg $distro $ROOTFS_DIR http://ftp.debian.org/debian/
-# }
-# 
 
 #run_bootstrap() {
 #sudo qemu-debootstrap --arch=armhf --variant=buildd  --keyring /usr/share/keyrings/debian-archive-keyring.gpg  $distro $ROOTFS_DIR http://ftp.debian.org/debian/
@@ -136,8 +133,6 @@ sudo sh -c 'cat <<EOT > '$ROOTFS_DIR'/etc/hosts
 127.0.0.1       localhost
 127.0.1.1       mksocfpga.local      mksocfpga
 ::1             localhost ip6-localhost ip6-loopback
-#fe00::0         ip6-localnet
-#ff00::0         ip6-mcastprefix
 ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
 EOT'
@@ -145,13 +140,17 @@ EOT'
 }
 
 gen_wired_network() {
-sudo sh -c 'cat <<EOT > '$ROOTFS_DIR'/etc/systemd/network/wired.network
+sudo sh -c 'cat <<EOT > '$ROOTFS_DIR'/etc/systemd/network/eth0
 [Match]
 Name=eth0
 
 [Network]
-DHCP=yes
-EOT'
+DHCP=ipv4
+IPv6PrivacyExtensions=true
+IPv6AcceptRouterAdvertisements=false
+
+[DHCP]
+UseDomains=true
 
 }
 
@@ -224,6 +223,7 @@ sudo sh -c 'cat <<EOT > '$ROOTFS_DIR'/etc/locale.gen
 # ber_MA UTF-8
 # bg_BG CP1251
 # bg_BG.UTF-8 UTF-8
+# bh_IN.UTF-8 UTF-8
 # bho_IN UTF-8
 # bn_BD UTF-8
 # bn_IN UTF-8
@@ -247,6 +247,7 @@ sudo sh -c 'cat <<EOT > '$ROOTFS_DIR'/etc/locale.gen
 # ca_FR.UTF-8 UTF-8
 # ca_IT ISO-8859-15
 # ca_IT.UTF-8 UTF-8
+# ce_RU UTF-8
 # cmn_TW UTF-8
 # crh_UA UTF-8
 # cs_CZ ISO-8859-2
@@ -256,7 +257,7 @@ sudo sh -c 'cat <<EOT > '$ROOTFS_DIR'/etc/locale.gen
 # cy_GB ISO-8859-14
 # cy_GB.UTF-8 UTF-8
 # da_DK ISO-8859-1
-da_DK.UTF-8 UTF-8
+# da_DK.UTF-8 UTF-8
 # de_AT ISO-8859-1
 # de_AT.UTF-8 UTF-8
 # de_AT@euro ISO-8859-15
@@ -271,7 +272,7 @@ da_DK.UTF-8 UTF-8
 # de_LI.UTF-8 UTF-8
 # de_LU ISO-8859-1
 # de_LU.UTF-8 UTF-8
-# de_LU@eurosetup_configfiles ISO-8859-15
+# de_LU@euro ISO-8859-15
 # doi_IN UTF-8
 # dv_MV UTF-8
 # dz_BT UTF-8
@@ -288,7 +289,7 @@ da_DK.UTF-8 UTF-8
 # en_CA.UTF-8 UTF-8
 # en_DK ISO-8859-1
 # en_DK.ISO-8859-15 ISO-8859-15
-en_DK.UTF-8 UTF-8
+# en_DK.UTF-8 UTF-8
 # en_GB ISO-8859-1
 # en_GB.ISO-8859-15 ISO-8859-15
 en_GB.UTF-8 UTF-8
@@ -302,7 +303,7 @@ en_GB.UTF-8 UTF-8
 # en_NZ ISO-8859-1
 # en_NZ.UTF-8 UTF-8
 # en_PH ISO-8859-1
-# en_PH.UTF-8 UTF-8e
+# en_PH.UTF-8 UTF-8
 # en_SG ISO-8859-1
 # en_SG.UTF-8 UTF-8
 # en_US ISO-8859-1
@@ -528,6 +529,7 @@ en_US.UTF-8 UTF-8
 # pt_PT.UTF-8 UTF-8
 # pt_PT@euro ISO-8859-15
 # quz_PE UTF-8
+# raj_IN UTF-8
 # ro_RO ISO-8859-2
 # ro_RO.UTF-8 UTF-8
 # ru_RU ISO-8859-5
@@ -597,6 +599,7 @@ en_US.UTF-8 UTF-8
 # ts_ZA UTF-8
 # tt_RU UTF-8
 # tt_RU@iqtelif UTF-8
+# tu_IN.UTF-8 UTF-8
 # ug_CN UTF-8
 # uk_UA KOI8-U
 # uk_UA.UTF-8 UTF-8
@@ -652,11 +655,11 @@ gen_fstab
 
 sudo sh -c 'echo mksocfpga > '$ROOTFS_DIR'/etc/hostname'
 
-#gen_hosts
+gen_hosts
 
 
-sudo rm /etc/resolv.conf
-sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
+#sudo rm /etc/resolv.conf
+#sudo ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
 sudo mkdir -p /etc/systemd/network
 
@@ -671,7 +674,7 @@ gen_wired_network
 
 sudo sh -c 'echo T0:2345:respawn:rootfs/sbin/getty -L ttyS0 115200 vt100 >> '$ROOTFS_DIR'/etc/inittab'
 
-#gen_locale_gen
+gen_locale_gen
 
 
 sudo sh -c 'cat <<EOT > '$ROOTFS_DIR'/etc/locale.conf
@@ -728,7 +731,6 @@ echo "qemu stage2 mod applied "
 sudo chroot $ROOTFS_MNT /debootstrap/debootstrap --second-stage
 
 setup_configfiles    
-##    init_chroot
 }
 
 gen_install_in-img() {

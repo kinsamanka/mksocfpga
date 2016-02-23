@@ -8,10 +8,20 @@
 
 <alias name="ethernet0" value="/sopc/ethernet@0xff702000"/>
 
+<DTAppend name="3-3-v-regulator" type="node" parentlabel="" newlabel="3-3-v-regulator"/>
+<DTAppend name="compatible" type="string" parentlabel="3-3-v-regulator" val="regulator-fixed"/>
+<DTAppend name="regulator-name" type="string" parentlabel="3-3-v-regulator" val="3.3V"/>
+<DTAppend name="regulator-min-microvolt" type="number" parentlabel="3-3-v-regulator" val="3300000"/>
+<DTAppend name="regulator-max-microvolt" type="number" parentlabel="3-3-v-regulator" val="3300000"/>
+
+
 <DTAppend name="#address-cells" type="number" parentlabel="hps_0_sdmmc" val="1"/>
 <DTAppend name="#size-cells" type="number" parentlabel="hps_0_sdmmc" val="0"/>
-<DTAppend name="supports-highspeed"  parentlabel="hps_0_sdmmc" />
+<DTAppend name="cap-mmc-highspeed"  parentlabel="hps_0_sdmmc" />
+<DTAppend name="cap-sd-highspeed"  parentlabel="hps_0_sdmmc" />
 <DTAppend name="broken-cd" type="bool" parentlabel="hps_0_sdmmc" val="true"/>
+<DTAppend name="vmmc-supply" type="phandle" parentlabel="hps_0_sdmmc" val="regulator_3_3v"/>
+<DTAppend name="vqmmc-supply" type="phandle" parentlabel="hps_0_sdmmc" val="regulator_3_3v"/>
 <DTAppend name="compatible" type="string" parentlabel="hps_0_sdmmc" val="altr,socfpga-dw-mshc" action="replace"/>
 <DTAppend name="altr,dw-mshc-ciu-div" type="number" parentlabel="hps_0_sdmmc" val="3"/>
 <DTAppend name="altr,dw-mshc-sdr-timing"  parentlabel="hps_0_sdmmc" >
@@ -61,7 +71,7 @@
 
 <DTAppend name="phy-mode" type="string" parentlabel="hps_0_gmac1" val="rgmii"/>
 
-<DTAppend name="snps,phy-addr" type="hex" parentlabel="hps_0_gmac1" val="0xffffffff"/>
+<!-- <DTAppend name="snps,phy-addr" type="hex" parentlabel="hps_0_gmac1" val="0xffffffff"/> -->
 <DTAppend name="phy-addr" type="hex" parentlabel="hps_0_gmac1" val="0xffffffff"/>
 <DTAppend name="txc-skew-ps" type="number" parentlabel="hps_0_gmac1" val="0xa28"/>
 <DTAppend name="rxc-skew-ps" type="number" parentlabel="hps_0_gmac1" val="0x7d0"/>

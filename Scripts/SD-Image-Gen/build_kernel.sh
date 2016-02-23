@@ -98,8 +98,8 @@ KERNEL_CONF='socfpga_defconfig'
 IMG_FILE=${WORK_DIR}/mksoc_sdcard.img
 DRIVE=/dev/loop0
 
-KERNEL_BUILD_DIR=${WORK_DIR}/arm-linux-${KERNEL_FOLDER_NAME}-gnueabifh-kernel
-KERNEL_DIR=${KERNEL_BUILD_DIR}/linux
+KERNEL_TOP_DIR=${WORK_DIR}/arm-linux-${KERNEL_FOLDER_NAME}-gnueabifh-kernel
+KERNEL_DIR=${KERNEL_TOP_DIR}/linux
 
 NCORES=`nproc`
 
@@ -139,16 +139,16 @@ fi
 }
 
 clone_kernel() {
-    if [ -d ${KERNEL_BUILD_DIR} ]; then
-        echo the kernel target directory $KERNEL_BUILD_DIR already exists.
+    if [ -d ${KERNEL_TOP_DIR} ]; then
+        echo the kernel target directory $KERNEL_TOP_DIR already exists.
         echo cleaning repo
-        cd $KERNEL_BUILD_DIR/linux 
+        cd $KERNEL_TOP_DIR/linux 
         git clean -d -f -x
         git fetch linux
         git checkout $KERNEL_CHKOUT
     else
-        mkdir -p $KERNEL_BUILD_DIR
-        cd $KERNEL_BUILD_DIR
+        mkdir -p $KERNEL_TOP_DIR
+        cd $KERNEL_TOP_DIR
         git clone $KERNEL_URL linux
         cd linux 
         git remote add linux $KERNEL_URL
@@ -159,16 +159,16 @@ clone_kernel() {
 }
 
 fetch_kernel() {
-    if [ -d ${KERNEL_BUILD_DIR} ]; then
-        echo the kernel target directory $KERNEL_BUILD_DIR already exists.
+    if [ -d ${KERNEL_TOP_DIR} ]; then
+        echo the kernel target directory $KERNEL_TOP_DIR already exists.
         echo reinstalling file
-        cd $KERNEL_BUILD_DIR 
+        cd $KERNEL_TOP_DIR 
         echo "deleting kernel folder"
         rm -Rf linux 
     else
-        echo "creating ${KERNEL_BUILD_DIR}"
-        mkdir -p $KERNEL_BUILD_DIR
-        cd $KERNEL_BUILD_DIR
+        echo "creating ${KERNEL_TOP_DIR}"
+        mkdir -p $KERNEL_TOP_DIR
+        cd $KERNEL_TOP_DIR
         echo "fetching kernel"
         wget $KERNEL_FILE_URL
         echo "fetching patch"
@@ -228,15 +228,23 @@ echo "#-------------------------------------------------------------------------
 set -e -x
 
 if [ ! -z "$WORK_DIR" ]; then
-install_dep
-echo "fetching / extracting toolchain"
-get_toolchain
-echo "Downloading / extracting kernel"
-fetch_kernel
-    echo "Applying patch"
-    patch_kernel
+#install_dep
+#echo "fetching / extracting toolchain"
+#get_toolchain
+#echo "Downloading / extracting kernel"
+#fetch_kernel
+#    echo "Applying patch"
+#    patch_kernel
 #echo "cloning kernel"
 #clone_kernel
+cd $KERNEL_TOP_DIR
+
+echo "deleting kernel folder"
+rm -Rf linux 
+mkdir -p $KERNEL_DIR
+
+tar xf linux.tar.gz
+echo "comtressed kernel extracted"
 echo "building kernel"
 build_kernel
 echo "#---------------------------------------------------------------------------------- "
