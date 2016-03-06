@@ -641,10 +641,10 @@ set_global_assignment -name VERILOG_FILE ../../ip/intr_capturer/intr_capturer.v
 set_global_assignment -name VERILOG_FILE ../../ip/debounce/debounce.v
 set_global_assignment -name VERILOG_FILE ../../ip/altsource_probe/hps_reset.v
 set_global_assignment -name QIP_FILE soc_system/synthesis/soc_system.qip
+set_global_assignment -name QIP_FILE "../../megawizard/lpm-ip/lpm_mux16.qip"
+set_global_assignment -name QIP_FILE "../../megawizard/lpm-ip/lpm_shiftreg16.qip"
 set_global_assignment -name SYSTEMVERILOG_FILE ghrd.sv
 set_global_assignment -name VHDL_FILE ../../megawizard/lpm_pack.vhd
-set_global_assignment -name QIP_FILE "../../megawizard/lpm-ip/Mux16x1.qip"
-set_global_assignment -name QIP_FILE "../../megawizard/lpm-ip/Shiftreg16.qip"
 set_global_assignment -name VHDL_FILE ../../megawizard/SRL16E.vhd
 set_global_assignment -name VHDL_FILE ../../hm2/config/i25_x9card.vhd
 set_global_assignment -name VHDL_FILE ../../hm2/config/IDROMConst.vhd

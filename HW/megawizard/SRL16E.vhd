@@ -3,101 +3,77 @@ USE ieee.std_logic_1164.all;
 
 --LIBRARY work;
 use work.lpm_components.all;
-use work.Shiftreg16;
-use work.Mux16x1;
+use work.lpm_shiftreg16;
+use work.lpm_mux16;
 
 ENTITY SRL16E IS
 	generic(INIT : bit_vector := x"0000");
 	port
 	(
---		A : IN STD_LOGIC_VECTOR(3 downto 0);
-		CE : IN STD_LOGIC;
-		A0 : IN STD_LOGIC;
-		A1 : IN STD_LOGIC;
-		A2 : IN STD_LOGIC;
-		A3 : IN STD_LOGIC;
-		CLK : IN STD_LOGIC;
-		D : IN STD_LOGIC;
-		Q : OUT STD_LOGIC
+	CE :  IN STD_LOGIC;
+--	A :   IN  STD_LOGIC_VECTOR(3 downto 0);
+	A0 : IN STD_LOGIC;
+	A1 : IN STD_LOGIC;
+	A2 : IN STD_LOGIC;
+	A3 : IN STD_LOGIC;
+   CLK : IN STD_LOGIC;
+   D :   IN STD_LOGIC;
+   Q :   OUT STD_LOGIC
 	);
-	END SRL16E;
+
+END SRL16E;
 	
 ARCHITECTURE arch OF SRL16E IS
 
-	SIGNAL q_sig	: STD_LOGIC_VECTOR (15 DOWNTO 0);
-	SIGNAL adr_sig	: STD_LOGIC_VECTOR (3 DOWNTO 0);
+   SIGNAL adr_sig	: STD_LOGIC_VECTOR (3 DOWNTO 0);
 
---	SIGNAL 		addr0		: STD_LOGIC ;
---	SIGNAL 		addr1		: STD_LOGIC ;
---	SIGNAL 		addr2		: STD_LOGIC ;
---	SIGNAL 		addr3		: STD_LOGIC ;
-----	SIGNAL 		data0		: STD_LOGIC ;
---	SIGNAL 		data1		: STD_LOGIC ;
---	SIGNAL 		data2		: STD_LOGIC ;
---	SIGNAL 		data3		: STD_LOGIC ;
---	SIGNAL 		data4		: STD_LOGIC ;
---	SIGNAL 		data5		: STD_LOGIC ;
---	SIGNAL 		data6		: STD_LOGIC ;
---	SIGNAL 		data7		: STD_LOGIC ;
---	SIGNAL 		data8		: STD_LOGIC ;
---	SIGNAL 		data9		: STD_LOGIC ;
---	SIGNAL 		data10		: STD_LOGIC ;
---	SIGNAL 		data11		: STD_LOGIC ;
---	SIGNAL 		data12		: STD_LOGIC ;
---	SIGNAL 		data13		: STD_LOGIC ;
---	SIGNAL 		data14		: STD_LOGIC ;
---	SIGNAL 		data15		: STD_LOGIC ;
 
-BEGIN
+-- component lpm_shiftreg16 
+--    PORT 
+--    ( 
+--       clock : IN STD_LOGIC; 
+--       shiftin : IN STD_LOGIC;
+--       enable : IN STD_LOGIC;
+--       q  : OUT STD_LOGIC_VECTOR(15 downto 0) 
+--    ); 
+-- end component; 
+-- 
+-- 	component lpm_mux16to1 
+-- 	PORT 
+-- 	( 
+-- 		data15 : IN STD_LOGIC; 
+-- 		data14 : IN STD_LOGIC; 
+-- 		data13 : IN STD_LOGIC; 
+-- 		data12 : IN STD_LOGIC; 
+-- 		data11 : IN STD_LOGIC; 
+-- 		data10 : IN STD_LOGIC; 
+-- 		data9 : IN STD_LOGIC; 
+-- 		data8 : IN STD_LOGIC; 
+-- 		data7 : IN STD_LOGIC; 
+-- 		data6 : IN STD_LOGIC; 
+-- 		data5 : IN STD_LOGIC; 
+-- 		data4 : IN STD_LOGIC; 
+-- 		data3 : IN STD_LOGIC; 
+-- 		data2 : IN STD_LOGIC; 
+-- 		data1 : IN STD_LOGIC; 
+-- 		data0 : IN STD_LOGIC; 
+-- 		sel : IN STD_LOGIC_VECTOR(3 downto 0); 
+-- 		result : OUT STD_LOGIC 
+-- 	); 
+-- end component; 
+-- 
+	
+	signal shift_out : STD_LOGIC_VECTOR(15 downto 0); 
+BEGIN 
 
---	port map
---	(
---		CE  => enable_sig,
---		A0  => sel_sig(0),
---		A1  => sel_sig(1),
---		A2  => sel_sig(2),
---		A3  => sel_sig(3),
---		CLK  => clock_sig,
---		D   => shiftin_sig,
---		Q   => result_sig
+--shiftreg_inst : shiftreg PORT MAP (
+--		clock	 => CLK,
+--		enable	 => CE,
+--		shiftin	 => D,
+--		q	 => Q
 --	);
 
-Shiftreg16_inst : Shiftreg16 PORT MAP (
-		clock	 => CLK,
-		enable	 => CE,
-		shiftin	 => D,
-		q	 => q_sig
-	);
-
-
-Mux16x1_inst : Mux16x1 PORT MAP (
-		data0	 => q_sig(0), 
-		data1	 => q_sig(0), 
-		data2	 => q_sig(0), 
-		data3	 => q_sig(0),
-		data4	 => q_sig(0), 
-		data5	 => q_sig(0),
-		data6	 => q_sig(0),
-		data7	 => q_sig(0),
-		data8	 => q_sig(0),
-		data9	 => q_sig(0),
-		data10	 => q_sig(10),
-		data11	 => q_sig(11),
-		data12	 => q_sig(12),
-		data13	 => q_sig(13),
-		data14	 => q_sig(14),
-		data15	 => q_sig(15),
-		sel	 => adr_sig,
-		result => Q
-	);
-	
-		adr_sig(0)	<=		A0; 	
-		adr_sig(1)	<=		A1; 	
-		adr_sig(2)	<=		A2; 	
-		adr_sig(3)	<=		A3; 	
-	
---
---ux16x1_inst : Mux16x1 PORT MAP (
+--mux16_inst : mux16 PORT MAP (
 --		data0	 => data0_sig,
 --		data1	 => data1_sig,
 --		data10	 => data10_sig,
@@ -115,26 +91,42 @@ Mux16x1_inst : Mux16x1 PORT MAP (
 --		data8	 => data8_sig,
 --		data9	 => data9_sig,
 --		sel	 => sel_sig,
---		result => Q
+--		result	 => result_sig
+--		result	 => result_sig
 --	);
---
---		q_sig(0)  <=	data0_sig;
---		q_sig(1)  <=	data1_sig;
---		q_sig(2)  <=	data2_sig;
---		q_sig(3)  <=	data3_sig;
---		q_sig(4)  <=	data4_sig;
---		q_sig(5)  <=	data5_sig;
---		q_sig(6)  <=	data6_sig;
---		q_sig(7)  <=	data7_sig;
---		q_sig(8)  <=	data8_sig;
---		q_sig(9)  <=	data9_sig;
---		q_sig(10)  <=	data10_sig;
---		q_sig(11)  <=	data11_sig;
---		q_sig(12)  <=	data12_sig;
---		q_sig(13)  <=	data13_sig;
---		q_sig(14)  <=	data14_sig;
---		q_sig(15)  <=	data15_sig;
+--	
+
+		adr_sig(0)	<=		A0; 	
+		adr_sig(1)	<=		A1; 	
+		adr_sig(2)	<=		A2; 	
+		adr_sig(3)	<=		A3; 	
 
 
-		
+   i1 : lpm_shiftreg16
+   PORT MAP(clock => CLK, 
+         shiftin => D, 
+         enable => CE, 
+         q => shift_out); 
+
+   i2 : lpm_mux16 
+
+   PORT MAP(data15 => shift_out(15), 
+         data14 => shift_out(14), 
+         data13 => shift_out(13), 
+         data12 => shift_out(12), 
+         data11 => shift_out(11), 
+         data10 => shift_out(10), 
+         data9 => shift_out(9), 
+         data8 => shift_out(8), 
+         data7 => shift_out(7), 
+         data6 => shift_out(6), 
+         data5 => shift_out(5), 
+         data4 => shift_out(4), 
+         data3 => shift_out(3), 
+         data2 => shift_out(2), 
+         data1 => shift_out(1), 
+         data0 => shift_out(0), 
+         sel => adr_sig, 
+         result => Q); 
+
 END;
