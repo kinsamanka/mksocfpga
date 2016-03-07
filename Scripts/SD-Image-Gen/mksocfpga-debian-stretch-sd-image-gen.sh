@@ -15,6 +15,8 @@ SCRIPT_ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CURRENT_DIR=`pwd`
 WORK_DIR=${1}
 
+CURRENT_DATE=`date -I`
+
 ROOTFS_DIR=${CURRENT_DIR}/rootfs
 MK_KERNEL_DRIVER_FOLDER=${SCRIPT_ROOT_DIR}/../../SW/MK/kernel-drivers
 
@@ -121,9 +123,11 @@ CC_FILE="${CC_FOLDER_NAME}.tar.xz"
 CC="${CC_DIR}/bin/arm-linux-gnueabihf-"
 
 #IMG_FILE=${CURRENT_DIR}/mksoc_sdcard-test.img
-IMG_FILE=${CURRENT_DIR}/mksocfpga_${distro}_${KERNEL_FOLDER_NAME}_sdcard.img
 
-MK_RIPROOTFS_NAME=${CURRENT_DIR}/mksocfpga_${distro}_${KERNEL_FOLDER_NAME}_mk-rip-rootfs-final.tar.bz2
+FILE_PRELUDE=${CURRENT_DIR}/mksocfpga_${distro}_${KERNEL_FOLDER_NAME}-${CURRENT_DATE}
+IMG_FILE=${FILE_PRELUDE}_sdcard.img
+
+MK_RIPROOTFS_NAME=${FILE_PRELUDE}_mk-rip-rootfs-final.tar.bz2
 
 COMP_REL=${distro}_${KERNEL_FOLDER_NAME}
 
@@ -173,8 +177,6 @@ ${SCRIPT_ROOT_DIR}/create_img.sh ${CURRENT_DIR} ${IMG_FILE}
 compress_rootfs(){
 COMPNAME=${COMP_REL}_${COMP_PREFIX}
 
-#DRIVE=`bash -c 'sudo losetup --show -f '${IMG_FILE}''`
-#sudo partprobe ${DRIVE}
 sudo kpartx -a -s -v ${IMG_FILE}
 
 sudo mkdir -p ${ROOTFS_MNT}
@@ -188,7 +190,6 @@ cd ${CURRENT_DIR}
 echo "${COMPNAME} rootfs compressed finish ... unmounting"
 
 sudo umount -R ${ROOTFS_MNT}
-#sudo losetup -D
 sudo kpartx -d -s -v ${IMG_FILE}
 }
 
@@ -504,7 +505,7 @@ if [ ! -z "${WORK_DIR}" ]; then
 
 #build_rootfs_in_image_and_compress
 
-##fetch_extract_rcn_rootfs
+## fetch_extract_rcn_rootfs
 
 create_image
 
